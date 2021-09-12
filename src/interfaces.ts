@@ -16,12 +16,8 @@ interface IUser {
 }
 
 interface IRow {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  state: string;
+  user: IUser;
+  key: string;
 }
 
 export type { IUser, IAdress, IRow }

@@ -14,10 +14,17 @@ interface ISortBy {
 const Table = ():JSX.Element => {
   const dispatch = useDispatch();
   const { users } = useSelector((state: RootState) => state.users);
+  const { search } = useSelector((state: RootState) => state.search);
+  const { filter } = useSelector((state: RootState) => state.filter);
   const [pagination, setPagination] = useState(1);
   const start = (pagination - 1) * 20;
   const end = pagination * 20;
-  const maxPagination = Math.floor(users.length / 20);
+  const usersArray = users
+    .filter((el) => filter ? el.adress.state === filter : 1)
+    .filter((elem) => elem.firstName.toLowerCase().includes(search.toLowerCase()));
+  const usersLength = usersArray.length;
+  const maxPagination = Math.floor(usersLength / 20) || 1;
+
   const theadArr = [
     {name: 'id', className: 'thead', hidden: false, up: false, id: 0},
     {name: 'First Name', className: 'thead thead--hidden', hidden: true, up: false, id: 1},
@@ -58,6 +65,27 @@ const Table = ():JSX.Element => {
     setTh(temp);
   }
 
+  const rows = usersArray
+  .sort((a, b) => {
+    const { order, id } = sortBy;
+    if (id === 5) {
+      if (a.adress.state > b.adress.state) return order ? 1 : -1;
+      if (a.adress.state < b.adress.state) return order ? -1 : 1;
+      return 0
+    }
+    const elem1 = Object.entries(a)[id][1];
+    const elem2 = Object.entries(b)[id][1];
+    if (elem1 > elem2) return order ? 1 : -1; 
+    if (elem1 < elem2) return order ? -1 : 1;
+    return 0;
+  })
+  .slice(start, end)
+  .map((elem) => 
+    <Row 
+      key={`${elem.id}-${elem.email}`}
+      user={elem}
+    />)
+
   const handleClick = (id: number) => {
     updateUsers(id);
     const order = th[id].id === sortBy.id? !sortBy.order : true;
@@ -66,11 +94,16 @@ const Table = ():JSX.Element => {
 
   useEffect(() => {
     updateUsers(sortBy.id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination])
   
   useEffect(() => {
     dispatch({type: sagaActions.FETCH_USERS_DATA});
   },[dispatch])
+
+  useEffect(() => {
+    if (pagination > maxPagination) setPagination(maxPagination);
+  }, [maxPagination, pagination, search])
 
   return (
     <>
@@ -81,36 +114,18 @@ const Table = ():JSX.Element => {
           </tr>
         </thead>
         <tbody className="table__body">
-          {
-            users
-              .slice(start, end)
-              .sort((a, b) => {
-                const { order, id } = sortBy;
-                if (id === 5) {
-                  if (a.adress.state > b.adress.state) return order ? 1 : -1;
-                  if (a.adress.state < b.adress.state) return order ? -1 : 1;
-                  return 0
-                }
-                const elem1 = Object.entries(a)[id][1];
-                const elem2 = Object.entries(b)[id][1];
-                if (elem1 > elem2) return order ? 1 : -1; 
-                if (elem1 < elem2) return order ? -1 : 1;
-                return 0;
-              })
-              .map(({ id, firstName, lastName, email, phone, adress: {state} }) => 
-            <Row 
-              key={`${id}-${email}`}
-              id={id}
-              firstName={firstName}
-              lastName={lastName}
-              email={email}
-              phone={phone}
-              state={state}
-            />)
-          }
+          {rows}
         </tbody>
       </table>
-      <Pagination pagination={pagination} setPagination={setPagination} maxPagination={maxPagination}/>
+      {usersLength 
+        ? 
+          <Pagination 
+            pagination={pagination} 
+            setPagination={setPagination} 
+            maxPagination={maxPagination}
+          />
+        : null 
+      }
     </>
   )
 }

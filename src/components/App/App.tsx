@@ -1,11 +1,24 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../state/store/store';
+import { setUser } from '../../state/store/user/userSlice';
 import Navbar from '../Navbar/Navbar';
 import Table from '../Table/Table';
 import './App.scss';
 
 const App = ():JSX.Element => {
+  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.user);
+
+  const handleClick = (e: any) => {
+    const row = e.target.closest('.tr') || null;
+    if (!row && user) dispatch(setUser(null));
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick)
+  })
 
   return (
     <div className="app">

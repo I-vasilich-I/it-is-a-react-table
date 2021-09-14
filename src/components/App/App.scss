@@ -4,11 +4,21 @@
 }
 
 .user__card {
-  margin: 0 auto;
-  width: 500px;
-  height: 500px;
+  margin: 30px auto;
+  width: 100%;
+  height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+
+  background-color: #04AA6D;
+  color: white;
+  overflow-y: scroll;
+
+  font-size: 18px;
+  font-weight: bold;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -11,25 +11,17 @@ td, th {
   text-align: left;
 }
 
-th {
+.thead {
   position: relative;
   padding-top: 12px;
   padding-bottom: 12px;
   background-color: #04AA6D;
   color: white;
 
-  &:last-child {
-    text-align: center;
-  }
-
-  
-
   &:hover {
     cursor: pointer;
   }
-}
 
-.thead {
   &::after {
     content: '';
     background-image: url('../../assets/arrow_drop_down_white_24dp.svg');
@@ -52,9 +44,3 @@ th {
     }
   }
 }
-
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-

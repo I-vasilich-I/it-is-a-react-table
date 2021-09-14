@@ -52,9 +52,9 @@ const Table = ():JSX.Element => {
     const temp = thArr.map((el, i) => {
       const elem = el;
       if (i === id) {
-        elem.up = !el.up && el.hidden ? false : !el.up; 
         elem.hidden = false;
         elem.className = `thead${elem.up? ' thead--up' : ''}`;
+        elem.up = !el.up && el.hidden ? false : !el.up; 
         return elem;
       }
       elem.className = 'thead thead--hidden';

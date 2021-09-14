@@ -16,7 +16,7 @@ function Search() {
     <input 
       className="search"
       placeholder="Search by name..."
-      type="text"
+      type="search"
       value={search}
       onChange={handleChange}
     >

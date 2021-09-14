@@ -1,0 +1,46 @@
+.table {
+  margin: 0 auto;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.thead {
+  position: relative;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #04AA6D;
+  color: white;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &::after {
+    content: '';
+    background-image: url('../../assets/arrow_drop_down_white_24dp.svg');
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    right: 5px;
+    transition: .3s ease-in-out;
+  }
+
+  &--hidden {
+    &::after {
+      display: none;
+    }
+  }
+
+  &--up {
+    &::after {
+      transform: rotate(180deg);
+    }
+  }
+}
